@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed49530bc9607624080ac317c507bcf3, type: 3}
+  m_Name: Bleed
+  m_EditorClassIdentifier: 
+  skillName: Bleed
+  skillSprite: {fileID: 0}
+  skillDescription: Slash target.
+  resourceType: 0
+  targetType: 1
+  damageType: 0
+  conditionList:
+  - _condition: {fileID: 11400000, guid: 42fa025955bbc9a48a4f317d5059de09, type: 2}
+    chance: 2
+    strenght: 2
+    persistence: 2
+    stacks: -5
+    actor: {fileID: 0}
+  resourceCost: 2
+  strenght: 2
+  range: 0

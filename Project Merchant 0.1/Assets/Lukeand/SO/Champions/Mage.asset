@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94ed92e31121acf4e92d6272431739fb, type: 3}
+  m_Name: Mage
+  m_EditorClassIdentifier: 
+  charSprite: {fileID: -3278025511288246781, guid: 93b44d94caa05bb4db294dfeed87e3fe, type: 3}
+  charName: Mage
+  initialHealth: 10
+  resourceType: 1
+  initialMaxResource: 10
+  battlePosition: 2
+  statList:
+  - stat: 0
+    value: 0
+  - stat: 1
+    value: 0
+  - stat: 2
+    value: 0
+  - stat: 3
+    value: 0
+  - stat: 4
+    value: 3
+  - stat: 5
+    value: 2
+  - stat: 6
+    value: 0
+  - stat: 7
+    value: 0
+  passive: {fileID: 0}
+  initialSkillList:
+  - {fileID: 11400000, guid: ba5dce5f12fdbe3478aa434a4f89dfd5, type: 2}
+  - {fileID: 11400000, guid: cf1745606382dc54e9bd9c11217831bd, type: 2}
+  - {fileID: 11400000, guid: dcfc532e9aac315429117622f8e8319a, type: 2}
+  - {fileID: 11400000, guid: 5ebcd77b39b4b1146ac76a411e976421, type: 2}
+  totalSkillList: []

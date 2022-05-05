@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed49530bc9607624080ac317c507bcf3, type: 3}
+  m_Name: Stealth
+  m_EditorClassIdentifier: 
+  skillName: Stealth
+  skillSprite: {fileID: 0}
+  skillDescription: You stay hidden for a turn. the next attack will crit.
+  resourceType: 0
+  targetType: 0
+  damageType: 0
+  conditionList:
+  - conditionType: 15
+    chance: 0
+    strenght: 2
+    persistence: 1
+    stacks: 0
+    actor: {fileID: 0}
+    damageType: 0
+  resourceCost: 2
+  strenght: 0
+  range: 2
