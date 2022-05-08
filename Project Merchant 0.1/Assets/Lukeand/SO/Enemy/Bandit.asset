@@ -42,3 +42,4 @@ MonoBehaviour:
   totalSkillList:
   - {fileID: 11400000, guid: ba5dce5f12fdbe3478aa434a4f89dfd5, type: 2}
   - {fileID: 11400000, guid: 32468f3310ff59440b9da53918e43ad6, type: 2}
+  enemyAI: {fileID: 11400000, guid: cfa192ef02b1a7b458b294ece155202c, type: 2}

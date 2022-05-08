@@ -231,6 +231,227 @@ public static class Utils
         return newSprite;
     }
 
+    public static int GetDamage(CombatSlot user)
+    {
+        //WE CHECK IF WE CRIT HERE.
+        //WE ALSO ADD BUFFS AFTER THE CRIT.
+
+        //CRIT CHANCE WORK BY X OUT OF 100.
+
+
+
+
+
+        int newDamage = 0;
+
+        int baseDamageScale = (int)(user.currentSkill.levelScaling * user.currentLevel);
+        int baseDamage = user.currentSkill.strenght + baseDamageScale;
+
+        int critChance = user.critChance;
+        int critNumber = Random.Range(0, 100);
+
+        if(critChance >= critNumber)
+        {
+            //WE INCREASE THE DAMAGE BY THE CRITDAMAGE 
+
+            newDamage *= user.critDamage;
+
+        }
+
+        List<ConditionBase> damageBuffList = GetBuffDamageConditions(user.conditionHandler.conditionList);
+        //WHAT IF ITS PORCENTAGE?
+        int buffDamage = 0;
+
+        for (int i = 0; i < damageBuffList.Count; i++)
+        {
+            if (damageBuffList[i].isPorcentage)
+            {
+                //
+                int porcentageBuff = (int)(baseDamage * damageBuffList[i].strenght);
+                buffDamage += porcentageBuff;
+            }
+            //OTHERWISE WE SIMPLY ADD.
+            buffDamage += (int)damageBuffList[i].strenght;
+        }
+
+        newDamage = newDamage + buffDamage;
+        return newDamage;
+        
+    }
+
+    public static int GetResistance(int damage, DamageType damageType, CombatSlot attacked)
+    {
+        //WE APPLY THE DAMAGE AGAINST THE TARGET RESISTANT.
+        //
+        int newDamage = 0;
+
+        int newResistance = 0;
+        List<ConditionBase> resistanceBuff = GetBuffResistanceConditions(attacked.conditionHandler.conditionList);
+
+        if (damageType == DamageType.Physical) 
+        {
+            newResistance = attacked.phyisicalResistance;
+            int buffResistance = 0;
+
+            for (int i = 0; i < resistanceBuff.Count; i++)
+            {
+                if(resistanceBuff[i]._condition.damageType == DamageType.Physical)
+                {
+                    if (resistanceBuff[i].isPorcentage)
+                    {
+                        int porcentageBuff = 0;
+
+                        porcentageBuff += (int)(newResistance * resistanceBuff[i].strenght);
+                        buffResistance += porcentageBuff;
+
+                    }
+                    buffResistance += (int)resistanceBuff[i].strenght;
+
+                }
+
+            }
+
+
+
+
+        }
+
+
+        if (damageType == DamageType.Magical)
+        {
+            newResistance = attacked.magicalResistance;
+            int buffResistance = 0;
+
+            for (int i = 0; i < resistanceBuff.Count; i++)
+            {
+                if (resistanceBuff[i]._condition.damageType == DamageType.Magical)
+                {
+                    if (resistanceBuff[i].isPorcentage)
+                    {
+                        int porcentageBuff = 0;
+
+                        porcentageBuff += (int)(newResistance * resistanceBuff[i].strenght);
+                        buffResistance += porcentageBuff;
+
+                    }
+                    buffResistance += (int)resistanceBuff[i].strenght;
+
+                }
+
+            }
+
+
+
+
+        }
+
+
+
+        //AND NOW WE CALCULATE DAMAGE AGAINST RESISTANCE.
+        //HOW SHOULD WE DO THIS?
+        //SHOULD IT BE LINEAR?
+        //WHAT HAPPENS ABOUT NEGATIVE DAMAGE? 
+        //IT IS LINEAR BUT THERE IS A MINIMUM DAMAGE RECEIVED. AND THATS 10% OF THE TOTAL DAMAGE.
+
+        int mitigation = damage - newResistance;
+        int minDamage = (int)(damage * 0.10);
+
+        newDamage = mitigation;
+        newDamage = Mathf.Clamp(newDamage, minDamage, 100000);
+
+
+        return newDamage;
+    }
+
+
+
+    public static List<ConditionBase> GetBuffDamageConditions(List<ConditionBase> conditionList)
+    {
+
+        List<ConditionBase> newList = new List<ConditionBase>();
+
+        for (int i = 0; i < conditionList.Count; i++)
+        {
+            if(conditionList[i]._condition.conditionType == ConditionType.Damage)
+            {
+                newList.Add(conditionList[i]);
+            }         
+        }
+
+        return newList;
+    }
+
+    public static List<ConditionBase> GetBuffResistanceConditions(List<ConditionBase> conditionList)
+    {
+        List<ConditionBase> newList = new List<ConditionBase>();
+        for (int i = 0; i < conditionList.Count; i++)
+        {       
+            if (conditionList[i]._condition.conditionType == ConditionType.Resistance)
+            {
+                newList.Add(conditionList[i]);
+            }
+        }
+        return newList;
+    }
+
+    #endregion
+
+    #region GETTING LIST FROM COMBAT
+    public static List<AllyCombatSlot> CreateTargettableAllyList(SkillBase newSkill, List<AllyCombatSlot> slotList)
+    {
+        List<AllyCombatSlot> newList = new List<AllyCombatSlot>();
+
+        if (newSkill.range == BattlePosition.Back)
+        {
+            //THEN IT ALWAYS HIT
+            newList = slotList;
+            return newList;
+        }
+
+        for (int i = 0; i < slotList.Count; i++)
+        {
+            if (slotList[i].currentBattlePosition == BattlePosition.Front) newList.Add(slotList[i]);
+        }
+
+
+        for (int i = 0; i < newList.Count; i++)
+        {
+            if (newList[i].conditionHandler.HasCondition(ConditionType.Hidden))
+            {
+                newList.RemoveAt(i);
+            }
+        }
+
+        return newList;
+    }
+
+    public static EnemyCombatSlot GetLowestHealthEnemy(List<EnemyCombatSlot> enemyList)
+    {
+        EnemyCombatSlot target = null;
+
+        for (int i = 0; i < enemyList.Count; i++)
+        {
+            if(enemyList[i].currentHealth == enemyList[i].currentHealth / 3)
+            {
+                if(target != null)
+                {
+                    if(enemyList[i].currentHealth < target.currentHealth)
+                    {
+                        target = enemyList[i];
+                        continue;
+                    }
+
+
+                }
+
+                target = enemyList[i];
+
+            }
+
+        }
+        return target;
+
+    }
 
 
     #endregion
@@ -250,6 +471,19 @@ public static class Utils
     }
 
     #endregion
+
+
+    public static ActionClass GetActionClass(CombatSlot actor, ActionType actionType, SkillBase _skill)
+    {
+        ActionClass newClass = new ActionClass();
+
+        newClass.actor = actor;
+        newClass.actionType = actionType;
+        newClass.skill = _skill;
+
+        return newClass;
+    }
+
 }
 
 

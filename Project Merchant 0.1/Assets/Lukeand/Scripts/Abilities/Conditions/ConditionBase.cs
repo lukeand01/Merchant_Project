@@ -11,21 +11,36 @@ public class ConditionBase
     [Tooltip("AGAINST TENACITY. CHANCE OF HITTING.")]
     public int chance; 
     [Tooltip("THE STATS OF WHAT IT DOES. APPLY FOR BLEED AND ALIKE")]
-    public int strenght; //
+    public float strenght; //
     [Tooltip("INITIAL TURNS ")]
-    public int persistence; 
-    [HideInInspector] public int stacks; //CURRENT TURNS.
+    public int persistence;
+    public bool isPorcentage;
+
+    [HideInInspector] public int currentStacks;
     [HideInInspector] public CombatSlot actor; //HOWEVER CAUSED THE CONDITION.
-    public void SetUp()
+    [HideInInspector] public int id; //THIS IS SO WE CAN IDENTIFTY.
+
+    public void SetUp(int _id, CombatSlot target, CombatSlot attacker)
     {
 
+
+        actor = attacker;
+        id = _id;
+
+        _condition.SetUp(this, target, attacker);
     }
 
 
 
     public void Act(CombatSlot target, CombatSlot attacker)
     {
-        _condition.Act(target, attacker, strenght); //THEN WE PUT ALL THE VARIABLES THERE.
+        _condition.Act(target, attacker, (int)strenght); //THEN WE PUT ALL THE VARIABLES THERE.
+    }
+
+
+    public void Close(CombatSlot target, CombatSlot attacker)
+    {
+        _condition.Close(this, target, attacker);
     }
 
     //
@@ -49,7 +64,8 @@ public enum ConditionType
     Overwatch, //THIS UNIT IS BEING PROTECTED BY ANOTHER UNIT.
     Regrowth, //HEALS EVERY TURN
     Bless,
-    Hidden //CANNOT BE TARGETTED
+    Hidden, //CANNOT BE TARGETTED
+    Taunt //ENEMIES WANT TO ATTACK THIS TARGET MORE. THERE IS A ROLL BASED IN STRENGHT
 }
 
 

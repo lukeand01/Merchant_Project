@@ -9,9 +9,18 @@ public class Condition : ScriptableObject
 
     public ConditionType conditionType;
     public DamageType damageType;
+    
 
     //BUT THERE ARE CONDTIONS THAT NEED SET UP.
 
+    public virtual void SetUp(ConditionBase _base, CombatSlot target, CombatSlot attacker)
+    {
+
+    }
+    public virtual void Close(ConditionBase _base, CombatSlot target, CombatSlot attacker)
+    {
+
+    }
 
     public virtual void Act(CombatSlot target, CombatSlot attacker, int damage)
     {

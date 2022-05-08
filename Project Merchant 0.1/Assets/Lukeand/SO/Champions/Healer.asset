@@ -36,5 +36,6 @@ MonoBehaviour:
   - stat: 7
     value: 0
   passive: {fileID: 0}
-  initialSkillList: []
+  initialSkillList:
+  - {fileID: 11400000, guid: cf1745606382dc54e9bd9c11217831bd, type: 2}
   totalSkillList: []

@@ -20,9 +20,13 @@ public class SkillBase : AbilityBase
     public int resourceCost;
     public int strenght;
     public BattlePosition range;
-
+    public float levelScaling; //HOW MUCH DAMAGE DOES IT GAIN FROM LEVEL.
 
     public virtual SingleTargetSkill GetSS()
+    {
+        return null;
+    }
+    public virtual MultipleTargetSkill GetMS()
     {
         return null;
     }

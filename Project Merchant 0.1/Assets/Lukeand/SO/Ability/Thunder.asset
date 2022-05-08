@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d3d97474431baa4e896e1e63194c65d, type: 3}
+  m_Name: Thunder
+  m_EditorClassIdentifier: 
+  skillName: Thunder
+  skillSprite: {fileID: 0}
+  skillDescription: 'Hits one chosen target and other 2 more targets with diminishing
+    damage. '
+  resourceType: 1
+  targetType: 1
+  damageType: 1
+  conditionList: []
+  resourceCost: 3
+  strenght: 3
+  range: 2
+  levelScaling: 0

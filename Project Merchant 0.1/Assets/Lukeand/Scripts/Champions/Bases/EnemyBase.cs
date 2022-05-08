@@ -6,6 +6,6 @@ using UnityEngine;
 public class EnemyBase : CharacterBase
 {
     //IT WONT BE BASED ON LEVEL. THERE WILL BE NEW ENEMIES. 
-   
+    public EnemyInteligence enemyAI;
 
 }

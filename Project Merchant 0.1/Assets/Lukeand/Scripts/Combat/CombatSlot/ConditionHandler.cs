@@ -34,14 +34,13 @@ public class ConditionHandler : MonoBehaviour
         return false;
     }
 
-    bool IsImeddiateCondition(ConditionType type)
+    bool IsImeddiateCondition(ConditionBase condition)
     {
-        if (type == ConditionType.Protection) return true;
-      
-        if(type == ConditionType.Hidden) return true;
-       
-        return false;
+        if (condition._condition.conditionType == ConditionType.Protection) return true;
 
+        if (condition._condition.conditionType == ConditionType.Hidden) return true;
+
+        return false;
     }
 
 
@@ -76,12 +75,10 @@ public class ConditionHandler : MonoBehaviour
 
     //NO CC CAN STACK.
 
-    public void AddCondition(ConditionBase condition)
+    public void AddCondition(ConditionBase condition, CombatSlot attacker)
     {
         //HIDDEN CONDITION WILL BE REMOVED IF YOU DO ANYTHING.
         //
-
-
 
 
         if(condition._condition.conditionType == ConditionType.Stun && HasCondition(ConditionType.Stun))
@@ -90,15 +87,8 @@ public class ConditionHandler : MonoBehaviour
             return;
         }
 
-        //DO THE CHECK FOR CC.
 
-        //
-
-
-        if (IsImeddiateCondition(condition._condition.conditionType))
-        {
-            
-        }
+        condition.SetUp(conditionList.Count, CombatHandler.instance.GetCurrentTurn(), attacker);
 
         if (StackCondition(condition)) return;
 
@@ -118,7 +108,7 @@ public class ConditionHandler : MonoBehaviour
                 if(conditionList[i]._condition.conditionType == _base._condition.conditionType)
                 {
                     _base.actor = CombatHandler.instance.GetCurrentTurn();
-                    conditionList[i].stacks += 1;
+                    conditionList[i].currentStacks += 1;
                     return true;
                 }
             }
@@ -132,74 +122,30 @@ public class ConditionHandler : MonoBehaviour
 
     void CreateCondition(ConditionBase _base)
     {
+        ConditionBase newBase = new ConditionBase();
 
-        _base.actor = CombatHandler.instance.GetCurrentTurn();
+        newBase = _base;
+
+        newBase.currentStacks = _base.persistence;
 
         conditionList.Add(_base);
         UpdateConditionUI();
         
-
     }
 
     #endregion
 
     #region HANDLE CONDITIONS
 
-    /*
-  public  void HandleCondition(ConditionBase condition)
-    {
-        //WE HANDLE ACTIVE CONDITIONS HERE.
-
-        ConditionType type = condition._condition.conditionType;
-
-        if(condition._condition.conditionType == ConditionType.Bleed || condition._condition.conditionType == ConditionType.Poison)
-        {
-            slot.LoseHealth(condition.strenght, condition.damageType);
-            return;
-        }
-        if(condition._condition.conditionType == ConditionType.Regrowth)
-        {
-            slot.RecoverHealth(condition.strenght);
-            return;
-        }
-        
-        if(condition._condition.conditionType == ConditionType.Hidden)
-        {
-            //WE MAKE IT LESS VISIBLE 
-            Debug.Log("got here");
-            var tempColor = slot.portrait.GetComponent<Image>().color;
-            tempColor.a = 0.5f;
-
-            slot.portrait.GetComponent<Image>().color = tempColor;
-
-            Debug.Log("supposed to be insivible");
-        }
-
-        if(condition._condition.conditionType == ConditionType.Protection)
-        {
-
-        }
-
-        if(condition._condition.conditionType == ConditionType.Overwatch)
-        {
-            //WE WILL LOWER THE OVERWATCH HERE
-
-        }
-
-        //DONT KNOW IF TEHRE ACTIVES THAT DONT DEAL DAMAGE.
-       
-    }
-  
-    */
-
     public void UpdateConditions()
     {
         for (int i = 0; i < conditionList.Count; i++)
         {
-            conditionList[i].stacks -= 1;
+            conditionList[i].currentStacks -= 1;
 
-            if(conditionList[i].stacks <= 0)
+            if(conditionList[i].currentStacks <= 0)
             {
+                conditionList[i].Close(slot, null);
                 conditionList.RemoveAt(i);
             }
         }
@@ -236,7 +182,7 @@ public class ConditionHandler : MonoBehaviour
 
         List<ConditionBase> conditionList = ActiveConditionsList();
         Observer.instance.OnConditionButton(conditionList[currentHandledCondition]);
-        //HandleCondition(conditionList[currentHandledCondition]);
+        conditionList[currentHandledCondition].Act(slot, null);
         CombatHandler.instance.controlBar.StartNarration(Utils.ConditionNarration(ActiveConditionsList()[currentHandledCondition], slot));
         currentHandledCondition += 1;
 
@@ -261,29 +207,35 @@ public class ConditionHandler : MonoBehaviour
 
     #region CONDITION INTERACTION
 
-
-    void ConditionInteraction(ConditionType type)
+    void ConditionInteraction(ConditionBase condition, ActionClass action)
     {
-        //THIS IS CALLED BY AN EVENT.
-        //CERTAIN CONDITION REACT TO TEH GAME.
+        
 
-        //HIDDEN WILL BE REMOVED IF THE USER USES ANY OTHER ABILITY.
-        //OVERWATCH WILL BE REMOVED IF THE ABILITY IS REMOVED AGAIN.
 
-        //I SHOULD DEFINE TYPES OF ACTIONS
+        if (!HasCondition(condition._condition.conditionType)) return; 
 
-        if (!HasCondition(type)) return; 
 
-        if(type == ConditionType.Hidden)
+
+
+
+
+
+
+
+
+        if(condition._condition.conditionType == ConditionType.Hidden) //AND IT WAS AN ATTACK.
         {
             //THIS SHOULD ONLY BE PROCED ONLY WE FINALIZE AN ACTION. HE CANNOT TAKE DAMAGE WHEN HIDDEN.
-
+            condition.Act(slot, null); //THIS REMOVES THE INVISIBLITY.
             RemoveCondition(ConditionType.Hidden);
+            //ALSO I SHOULD BECOME VISIBLE. 
         }
-        if(type == ConditionType.Overwatch)
+        if(condition._condition.conditionType == ConditionType.Overwatch)
         {
-            //WE REMOVE FROM THE LIST
-            //BUT WE ONLY REMOVE IT IF WE ARE ATTACKED
+            //WE REMOVE FROM THE LIST. JUST REMOVE. THE ACTUAL PROCESS IS SOMEWHERE ELSE.
+            //WE DONT REMOVE. WE TAKE ONE TURN OUT. IF 0 REMOVE IT.
+
+
 
 
         }
@@ -298,6 +250,7 @@ public class ConditionHandler : MonoBehaviour
             if(conditionList[i]._condition.conditionType == type)
             {
                 Debug.Log("removed");
+                conditionList[i].Close(slot, null);
                 conditionList.RemoveAt(i);
                 UpdateConditionUI();
                 return;

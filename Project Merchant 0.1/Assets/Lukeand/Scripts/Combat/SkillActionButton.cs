@@ -81,10 +81,12 @@ public class SkillActionButton : ButtonBase
                 //THEN WE ACTIVED INSTANTLY.
 
                 //I NEED TO CHANGE THE SUFFER ACTION.
-                CombatHandler.instance.GetCurrentTurn().SufferAction(skill);
+                CombatHandler.instance.GetCurrentTurn().SufferAction(skill, owner);
                 return;
 
             }
+
+
             Observer.instance.OnAllowTarget(skill.targetType, skill);
             selected.SetActive(true);
             aiming = true;

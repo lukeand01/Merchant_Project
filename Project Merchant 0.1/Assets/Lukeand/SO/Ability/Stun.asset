@@ -19,13 +19,12 @@ MonoBehaviour:
   targetType: 1
   damageType: 0
   conditionList:
-  - conditionType: 0
+  - _condition: {fileID: 11400000, guid: a428a921793f7f94fa797cf378c29445, type: 2}
     chance: 5
     strenght: 0
     persistence: 1
-    stacks: -3
+    currentStacks: 0
     actor: {fileID: 0}
-    damageType: 0
   resourceCost: 2
   strenght: 2
   range: 0

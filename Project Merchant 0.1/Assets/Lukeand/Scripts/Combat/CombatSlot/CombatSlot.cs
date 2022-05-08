@@ -44,31 +44,27 @@ public class CombatSlot : ButtonBase
     bool animationProcess;
 
     public bool ready;
+    bool _selected;
     public bool target;
     public bool dead;
     #endregion
 
     #region  STATS
+
+    public int currentLevel;
+
     public int maxHealth;
     public int currentHealth;
 
     public int maxResource;
     public int currentResource;
 
+    public int critChance;
+    public int critDamage;
 
+    public int phyisicalResistance; //IT COMES FROM ITENS 
+    public int magicalResistance; 
     #endregion
-
-    #region BUFFS
-    //HERE WE HOLD A LIST OF STATS. THOSE LISTS OF STATS COUNT AS ADDITIONAL STATS EVERYTIME WE MUST 
-    //IN THE START WE CHECK IF THERE ARE ALREADY PRESENT BUFFS GRANTED BY WEAPON OR SPECIAL CONDITIONS.
-
-
-    //I NEED TO THINK ABOUT BETTER ABOUT CHARACTER STATS. THE PLAYER STATS ARE FINE.
-
-
-
-    #endregion
-
 
 
     #region IMPORTANT PARTS
@@ -77,7 +73,6 @@ public class CombatSlot : ButtonBase
     [HideInInspector] public int id;
     [HideInInspector] public Sprite slotSprite;
     [HideInInspector] public string slotName;
-    [SerializeField] GameObject conditionTemplate;
     int turnsPlayed; //SO WE CAN CHECK CERTAINS PASSIVES.
     #endregion
 
@@ -86,7 +81,8 @@ public class CombatSlot : ButtonBase
 
     //MAYBE I SHOULD PLACE THE ENEMY SLOTS INSTEAD OF SETTING THEM MANUALLY.
 
-    SkillBase currentSkill;
+    public SkillBase currentSkill;
+    public SkillBase lastSkill;
 
     private void Awake()
     {
@@ -145,21 +141,20 @@ public class CombatSlot : ButtonBase
 
     public override void OnPointerClick(PointerEventData eventData)
     {
-        //I SHOULD BE ABLE TO GET INFORMATION ABOUT SOMEONE WITH THIS.
+
 
         if(eventData.button == PointerEventData.InputButton.Left && target)
         {
-            //THIS ISNT RIGHT STILL.
-            //EVENTUALLY I WANT TO CLICK ON IT AND TEH GAME REALIZE THAT I HAVE MULTIPLE TARGETS.
-            //FOR NOW THIS IS FINE.
 
-            //I ALSO NEED TO CARE ABOUT RANGE.
+            //IF THE SKILL IS 
 
-            //THERE WILL BE A BOOLEAN. MULTIPLE OR SINGLE. IF ITS SINGLE THEN ITS DIRECT OTHERWISE WE SELECT THIS FELLA.
-            //ALSO CHECK IF I HAVE SELECTED ENOUGH.
-            SufferAction(null);
+            CombatSlot attacker = CombatHandler.instance.GetCurrentTurn();
+            SufferAction(null, attacker);
             //
            
+
+
+
         }
         if (eventData.button == PointerEventData.InputButton.Right && !target)
         {
@@ -192,6 +187,16 @@ public class CombatSlot : ButtonBase
 
             return;
         }
+
+        if(skill.targetType == TargetType.Enemy && conditionHandler.HasCondition(ConditionType.Hidden))
+        {
+            //SO THAT MEANS THAT IF ITS AN ATTACK AND THE TARGET HAS HIDDEN IT CANT BE TARGETTED.
+
+            target = false;
+            return;
+        }
+
+
 
         currentSkill = skill;
 
@@ -236,27 +241,19 @@ public class CombatSlot : ButtonBase
 
     }
 
-    public void SufferAction(SkillBase skill)
+    public void SufferAction(SkillBase skill, CombatSlot attacker)
     {
+        Debug.Log("there is attacker here " + attacker.slotName);
 
-
-        if(skill != null)
+        if (skill != null)
         {
             currentSkill = skill;
         }
         //OVERWATCH DOESNT WORK IN GROUP ATTACKS.
 
-        if (conditionHandler.HasCondition(ConditionType.Overwatch))
-        {
-            //INSTEAD THE OVERWATCH TAKES IT.
-            //THIS IS NOT EVEN A BIT GOOD FOR 
-
-
-        }
-
         if (currentSkill.GetSS() != null)
         {
-            if (conditionHandler.HasCondition(ConditionType.Overwatch))
+            if (conditionHandler.HasCondition(ConditionType.Overwatch) && currentSkill.targetType == TargetType.Enemy)
             {
                 //THEN WE ATTACK SOMEONE ELSE.
                 //WE NEED TO SAY THAT IT ACTUALL DEFENDED BY SOMEONE ELSE.
@@ -264,23 +261,39 @@ public class CombatSlot : ButtonBase
                 ConditionBase condition = conditionHandler.GetCondition(ConditionType.Overwatch);
 
                 Debug.Log($"the {slotName} was defended by {condition.actor}");
-                HandleSingleAction(condition.actor);
+
+                //I HAVE TO NARRATE THAT IT WAS DIFFERENT. BUT THAT WILL BE FOR NEXT TIME
+
+                HandleSingleAction(condition.actor, attacker);
+                return;
             }       
-            HandleSingleAction(this);
+            HandleSingleAction(this, attacker);
         }
 
+        if(currentSkill.GetMS() != null)
+        {
+            //THEN WE CHECK IF WE HAVE ENOUGH THAT THE MULTIPLE NEED.
+            //IF WE DONT WE JUST MARK IT.
+            //WE SHOULD PUT EACH IN A LIST FOR WHEN WE CALL IT.
+
+
+
+
+        }
 
 
         StartCoroutine(ShakeSlot(1, 1));
     }
 
-    void HandleSingleAction(CombatSlot actualTarget)
+    void HandleSingleAction(CombatSlot actualTarget, CombatSlot attacker)
     {
-        currentSkill.GetSS().Action(actualTarget);
-        CombatHandler.instance.Action(currentSkill.GetSS(), actualTarget);
-        target = false;
-        selected.SetActive(false);
-        Observer.instance.OnAllowTarget(TargetType.Null, null);
+        
+
+        currentSkill.GetSS().Action(actualTarget, attacker); //USE THE ABILITY
+        CombatHandler.instance.Action(currentSkill.GetSS(), actualTarget); //TELL THE HANDLER YOU USED THE ABILITY
+        target = false; //REMOVE THE TARGET UI.
+        selected.SetActive(false); //REMOVE IT
+        Observer.instance.OnAllowTarget(TargetType.Null, null); //TELL EVERYONE ELSE TO REMOVE IT.
     }
 
     void HandleMultipleAction()
@@ -377,12 +390,23 @@ public class CombatSlot : ButtonBase
 
     }
 
-    public void AddBuff()
+    public void AddBuff(ConditionBase _base)
     {
-        //ADD BUFF TO THIS SLOT. BUFFS HAVE A 
+        //WE NEED TO KNOW IF ITS DAMAGE OR RESISTANCE.
+        //DAMAGE DOESNT CARE ABOUT TYPE.
+        //RESISTANCE DOES.
+
+
+
+
 
     }
+    public void RemoveBuff(int id)
+    {
 
+
+    }
+    //THE DAMAGE WILL ALWAYS BE THE BASE DAMAGE PLUS EVERY BUFF.
 
 
     #endregion

@@ -12,13 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed49530bc9607624080ac317c507bcf3, type: 3}
   m_Name: Overwatch
   m_EditorClassIdentifier: 
-  skillName: 
+  skillName: Overwatch
   skillSprite: {fileID: 0}
   skillDescription: 
   resourceType: 0
-  targetType: 0
+  targetType: 2
   damageType: 0
-  conditionList: []
+  conditionList:
+  - _condition: {fileID: 11400000, guid: 78f797c9c6ba86e4089046e4e4acb896, type: 2}
+    chance: 0
+    strenght: 0
+    persistence: 2
+    currentStacks: 1
+    actor: {fileID: 0}
   resourceCost: 0
   strenght: 0
   range: 0

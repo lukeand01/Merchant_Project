@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[CreateAssetMenu(menuName = "Condition / ")]
+[CreateAssetMenu(menuName = "Condition / Hidden")]
 public class ConditionHidden : Condition
 {
 
@@ -14,14 +14,25 @@ public class ConditionHidden : Condition
         
     }
 
-    public override void Act(CombatSlot target, CombatSlot attacker, int damage)
+    public override void SetUp(ConditionBase _base, CombatSlot target, CombatSlot attacker)
     {
-        //WE SIMPLY TELL THE SLOT TO BECOME OPAQUE.
-        //HOW DO WE DO TO RETURN TO ITS ORIGINAL FORM?
+        Image targetImage = target.portrait.GetComponent<Image>();
 
-        //AND ALSO GRANT BUFF.
-        
+        Color tempColor = targetImage.color;
+        tempColor.a = 0.5f;
 
-
+        targetImage.color = tempColor;
     }
+
+    public override void Close(ConditionBase _base, CombatSlot target, CombatSlot attacker)
+    {
+        //THIS IS CALLED WHEN WE REMOVE THE CONDITION.
+        Image targetImage = target.portrait.GetComponent<Image>();
+
+        var tempColor = targetImage.color;
+        tempColor.a = 1f;
+
+        targetImage.color = tempColor;
+    }
+
 }

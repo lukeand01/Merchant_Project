@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed49530bc9607624080ac317c507bcf3, type: 3}
+  m_Name: HolyBlade
+  m_EditorClassIdentifier: 
+  skillName: Holy Blade.
+  skillSprite: {fileID: 0}
+  skillDescription: Target gain additional damage.
+  resourceType: 1
+  targetType: 2
+  damageType: 0
+  conditionList:
+  - _condition: {fileID: 11400000, guid: 8e3e788c676e79647a69597001a58e0c, type: 2}
+    chance: 0
+    strenght: 0
+    persistence: 0
+    isPorcentage: 1
+    currentStacks: 0
+    actor: {fileID: 0}
+    id: 0
+  resourceCost: 0
+  strenght: 0
+  range: 0
+  levelScaling: 0

@@ -40,3 +40,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ba5dce5f12fdbe3478aa434a4f89dfd5, type: 2}
   - {fileID: 11400000, guid: cf1745606382dc54e9bd9c11217831bd, type: 2}
   totalSkillList: []
+  enemyAI: {fileID: 11400000, guid: cfa192ef02b1a7b458b294ece155202c, type: 2}

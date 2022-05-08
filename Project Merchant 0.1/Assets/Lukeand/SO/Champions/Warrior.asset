@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   charSprite: {fileID: 7305368834510452522, guid: 89a2033237b6cdf409ec65996cb45905, type: 3}
   charName: Warrior
-  initialHealth: 15
+  initialHealth: 50
   resourceType: 0
   initialMaxResource: 5
   battlePosition: 0
@@ -30,14 +30,14 @@ MonoBehaviour:
   - stat: 4
     value: 0
   - stat: 5
-    value: 1
+    value: 3
   - stat: 6
     value: 0
   - stat: 7
     value: 0
   passive: {fileID: 0}
   initialSkillList:
+  - {fileID: 11400000, guid: fadbbefe25e899647a2df8d6354ec2e7, type: 2}
   - {fileID: 11400000, guid: dcfc532e9aac315429117622f8e8319a, type: 2}
-  - {fileID: 11400000, guid: 5ebcd77b39b4b1146ac76a411e976421, type: 2}
   - {fileID: 11400000, guid: fadbbefe25e899647a2df8d6354ec2e7, type: 2}
   totalSkillList: []

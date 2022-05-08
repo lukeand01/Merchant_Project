@@ -37,6 +37,8 @@ public class CombatHandler : MonoBehaviour
 
     List<CombatSlot> turnList = new List<CombatSlot>();
     int currentTurn;
+
+    List<CombatSlot> multipleSlotChosen = new List<CombatSlot>();
     #endregion
 
     #region CONDITIONS LIST
@@ -215,7 +217,6 @@ public class CombatHandler : MonoBehaviour
         {
             currentState = CombatState.CombatEnd;            
             controlBar.StartNarration(Utils.CCNarration(turnList[currentTurn]));                      
-            Debug.Log("the character either died or got stunned. he cannot play his turn");
             return;
         }
 
@@ -253,8 +254,7 @@ public class CombatHandler : MonoBehaviour
 
    public void Action(SkillBase skill, CombatSlot target)
     {
-        currentState = CombatState.CombatEnd;    
-        
+        currentState = CombatState.CombatEnd;      
         controlBar.StartNarration(Utils.CombatNarration(skill, target, turnList[currentTurn]));
          
     }
@@ -264,7 +264,28 @@ public class CombatHandler : MonoBehaviour
     #region COMBAT FUNCTIONS
 
     
+    public void HandleMultipleList(bool shouldAdd, CombatSlot chosenSlot)
+    {
+        
 
+
+        if (shouldAdd)
+        {
+            multipleSlotChosen.Add(chosenSlot);
+
+        }
+        if (!shouldAdd)
+        {
+            for (int i = 0; i < multipleSlotChosen.Count; i++)
+            {
+                if(chosenSlot.id == multipleSlotChosen[i].id)
+                {
+                    multipleSlotChosen.RemoveAt(i);
+                }
+
+            }
+        }
+    }
 
 
     #endregion

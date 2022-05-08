@@ -39,7 +39,7 @@ public class ConditionButton : ButtonBase
         //temporaryPortrait.sprite = Utils.GetConditionSprite(_base.type.ToString());
 
         temporaryPortrait.text = _base._condition.conditionType.ToString();
-        quantity.text = _base.stacks.ToString();
+        quantity.text = _base.currentStacks.ToString();
 
         if (Utils.IsBuff(_base))
         {
@@ -47,7 +47,6 @@ public class ConditionButton : ButtonBase
         }
         else
         {
-            Debug.Log("it is a debuff");
             background.GetComponent<Image>().color = debuffColor;
         }
 

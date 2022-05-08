@@ -38,3 +38,4 @@ MonoBehaviour:
   passive: {fileID: 0}
   initialSkillList: []
   totalSkillList: []
+  enemyAI: {fileID: 11400000, guid: cfa192ef02b1a7b458b294ece155202c, type: 2}
